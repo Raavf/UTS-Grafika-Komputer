@@ -3,245 +3,245 @@ const ctx = canvas.getContext('2d');
 const W = canvas.width;
 const H = canvas.height;
 
-const gridSize = 20;
-const gridWidth = W / gridSize;
-const gridHeight = H / gridSize;
+const trackWidth = 500;
+const trackCenterX = W / 2;
+const laneLeft = trackCenterX - trackWidth / 2;
+const laneRight = trackCenterX + trackWidth / 2;
 
-const menu = document.getElementById('menu');
-const container = document.getElementById('container');
-const scoresDiv = document.getElementById('scores');
-const score1Display = document.getElementById('score1');
-const score2Display = document.getElementById('score2');
-const score2Wrapper = document.getElementById('score2Display');
+const trackStripHeight = 60;
+let trackStrip = ctx.createImageData(W, trackStripHeight);
 
-const gameOverScreen = document.getElementById('gameOverScreen');
-const finalScores = document.getElementById('finalScores');
-const restartButton = document.getElementById('restartButton');
-const countdownDiv = document.getElementById('countdown');
-
-let mode = 'single'; // 'single' atau 'two'
-
-let snake1 = [];
-let direction1 = 'right';
-let nextDirection1 = 'right';
-let score1 = 0;
-let alive1 = true;
-
-let snake2 = [];
-let direction2 = 'left';
-let nextDirection2 = 'left';
-let score2 = 0;
-let alive2 = true;
-
-let food = null;
-let gameRunning = false;
-
-function initGame() {
-  snake1 = [
-    {x: 5, y: 10},
-    {x: 4, y: 10},
-    {x: 3, y: 10}
-  ];
-  direction1 = 'right';
-  nextDirection1 = 'right';
-  score1 = 0;
-  alive1 = true;
-
-  if (mode === 'two') {
-    snake2 = [
-      {x: gridWidth - 6, y: 10},
-      {x: gridWidth - 5, y: 10},
-      {x: gridWidth - 4, y: 10}
-    ];
-    direction2 = 'left';
-    nextDirection2 = 'left';
-    score2 = 0;
-    alive2 = true;
-  } else {
-    snake2 = [];
-    alive2 = false;
-    score2 = 0;
-  }
-
-  spawnFood();
-  gameOverScreen.style.display = 'none';
-  updateScores();
+function setPixel(imgData, x, y, r, g, b, a = 255) {
+  if (x < 0 || y < 0 || x >= W || y >= imgData.height) return;
+  let idx = (y * W + x) * 4;
+  imgData.data[idx] = r;
+  imgData.data[idx + 1] = g;
+  imgData.data[idx + 2] = b;
+  imgData.data[idx + 3] = a;
 }
 
-function spawnFood() {
-  while(true) {
-    const x = Math.floor(Math.random() * gridWidth);
-    const y = Math.floor(Math.random() * gridHeight);
-    if(
-      !snake1.some(s => s.x === x && s.y === y) &&
-      !snake2.some(s => s.x === x && s.y === y)
-    ) {
-      food = {x, y};
-      break;
+function generateTrackStrip() {
+  for (let y = 0; y < trackStripHeight; y++) {
+    for (let x = 0; x < W; x++) {
+      if (x >= laneLeft && x <= laneRight) setPixel(trackStrip, x, y, 255, 255, 255);
+      else setPixel(trackStrip, x, y, 0, 0, 0);
+    }
+  }
+}
+generateTrackStrip();
+
+const kongWidth = 40;
+const kongHeight = 40;
+let kingkong = {
+  x: trackCenterX,
+  y: H - 100,
+  speedX: 0,
+  maxSpeedX: 7,
+  accelerationX: 1.2,
+  frictionX: 0.8
+};
+
+const keys = { left: false, right: false };
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') keys.left = true;
+  if (e.key === 'ArrowRight') keys.right = true;
+});
+window.addEventListener('keyup', e => {
+  if (e.key === 'ArrowLeft') keys.left = false;
+  if (e.key === 'ArrowRight') keys.right = false;
+});
+
+function updateKingkong() {
+  if (keys.left) kingkong.speedX -= kingkong.accelerationX;
+  if (keys.right) kingkong.speedX += kingkong.accelerationX;
+
+  kingkong.speedX *= kingkong.frictionX;
+  if (kingkong.speedX > kingkong.maxSpeedX) kingkong.speedX = kingkong.maxSpeedX;
+  if (kingkong.speedX < -kingkong.maxSpeedX) kingkong.speedX = -kingkong.maxSpeedX;
+
+  kingkong.x += kingkong.speedX;
+
+  let minX = laneLeft + kongWidth / 2;
+  let maxX = laneRight - kongWidth / 2;
+  if (kingkong.x < minX) {
+    kingkong.x = minX;
+    kingkong.speedX = 0;
+  }
+  if (kingkong.x > maxX) {
+    kingkong.x = maxX;
+    kingkong.speedX = 0;
+  }
+}
+
+const OBSTACLE_TYPES = ['barrel', 'rock'];
+const ITEM_TYPE = 'banana';
+
+class ObjectEntity {
+  constructor(type, x, y) {
+    this.type = type;
+    this.x = x;
+    this.y = y;
+    this.width = 30;
+    this.height = 30;
+  }
+
+  update() {
+    this.y += 5;
+  }
+
+  draw() {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+
+    switch (this.type) {
+      case 'barrel': drawBarrel(0, 0); break;
+      case 'rock': drawRock(0, 0); break;
+      case 'banana': drawBanana(0, 0); break;
+    }
+
+    ctx.restore();
+  }
+
+  isColliding(kong) {
+    let dx = Math.abs(this.x - kong.x);
+    let dy = Math.abs(this.y - kong.y);
+    return dx < (this.width / 2 + kongWidth / 2) && dy < (this.height / 2 + kongHeight / 2);
+  }
+}
+
+function drawBarrel(x, y) {
+  ctx.fillStyle = '#8B4513';
+  ctx.fillRect(x - 12, y - 15, 24, 30);
+  ctx.strokeStyle = '#000';
+  ctx.beginPath();
+  ctx.moveTo(x - 12, y - 10);
+  ctx.lineTo(x + 12, y - 10);
+  ctx.moveTo(x - 12, y);
+  ctx.lineTo(x + 12, y);
+  ctx.moveTo(x - 12, y + 10);
+  ctx.lineTo(x + 12, y + 10);
+  ctx.stroke();
+}
+
+function drawRock(x, y) {
+  ctx.fillStyle = '#777';
+  ctx.beginPath();
+  ctx.ellipse(x, y + 10, 15, 10, Math.PI / 4, 0, 2 * Math.PI);
+  ctx.fill();
+}
+
+function drawBanana(x, y) {
+  ctx.fillStyle = '#FFD700';
+  ctx.beginPath();
+  ctx.moveTo(x - 10, y);
+  ctx.quadraticCurveTo(x, y - 15, x + 10, y);
+  ctx.quadraticCurveTo(x, y + 8, x - 10, y);
+  ctx.fill();
+  ctx.strokeStyle = '#996600';
+  ctx.stroke();
+}
+
+function drawKingkong(x, y) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.fillStyle = '#654321';
+  ctx.beginPath();
+  ctx.arc(0, 0, 20, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.arc(-7, -5, 3, 0, Math.PI * 2);
+  ctx.arc(7, -5, 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+let objects = [];
+let spawnTimer = 0;
+let score = 0;
+let isGameOver = false;
+const gameOverScreen = document.getElementById('gameOverScreen');
+const restartButton = document.getElementById('restartButton');
+const finalScore = document.getElementById('finalScore');
+const scoreDisplay = document.getElementById('scoreDisplay');
+
+function spawnObjects() {
+  if (spawnTimer <= 0) {
+    let rand = Math.random();
+    let xPos = laneLeft + 15 + Math.random() * (trackWidth - 30);
+    if (rand < 0.6) {
+      let type = OBSTACLE_TYPES[Math.floor(Math.random() * OBSTACLE_TYPES.length)];
+      objects.push(new ObjectEntity(type, xPos, -40));
+    } else {
+      objects.push(new ObjectEntity(ITEM_TYPE, xPos, -40));
+    }
+    spawnTimer = 40 + Math.random() * 50;
+  } else {
+    spawnTimer--;
+  }
+}
+
+function updateObjects() {
+  objects.forEach(o => o.update());
+  objects = objects.filter(o => o.y < H + 40);
+}
+
+function checkCollision() {
+  for (let i = 0; i < objects.length; i++) {
+    let o = objects[i];
+    if (o.isColliding(kingkong)) {
+      if (o.type === ITEM_TYPE) {
+        score += 10;
+        objects.splice(i, 1);
+        i--;
+      } else {
+        isGameOver = true;
+        finalScore.textContent = 'Skor akhir: ' + score;
+        gameOverScreen.style.display = 'block';
+        break;
+      }
     }
   }
 }
 
-function drawRect(x, y, color) {
-  ctx.fillStyle = color;
-  ctx.fillRect(x * gridSize, y * gridSize, gridSize-1, gridSize-1);
-}
-
-function updateSnake(snake, direction, nextDirection, alive) {
-  if(!alive) return {snake, direction, alive, ateFood: false};
-
-  direction = nextDirection;
-  let head = {...snake[0]};
-
-  switch(direction) {
-    case 'right': head.x++; break;
-    case 'left': head.x--; break;
-    case 'up': head.y--; break;
-    case 'down': head.y++; break;
+let scrollY = 0;
+function drawTrack() {
+  let yOffset = scrollY % trackStripHeight;
+  for (let y = -yOffset; y < H; y += trackStripHeight) {
+    ctx.putImageData(trackStrip, 0, y);
   }
-
-  // Cek tembok dan diri sendiri
-  if(head.x < 0 || head.x >= gridWidth || head.y < 0 || head.y >= gridHeight) {
-    alive = false;
-    return {snake, direction, alive, ateFood: false};
-  }
-
-  if(snake.some(segment => segment.x === head.x && segment.y === head.y)) {
-    alive = false;
-    return {snake, direction, alive, ateFood: false};
-  }
-
-  snake.unshift(head);
-
-  let ateFood = (head.x === food.x && head.y === food.y);
-  if(!ateFood) snake.pop();
-
-  return {snake, direction, alive, ateFood};
-}
-
-function updateScores() {
-  score1Display.textContent = score1;
-  score2Display.textContent = score2;
-}
-
-function draw() {
-  ctx.clearRect(0, 0, W, H);
-  if(food) drawRect(food.x, food.y, '#f00');
-
-  snake1.forEach((seg, i) => {
-    drawRect(seg.x, seg.y, i === 0 ? '#0f0' : '#0a0');
-  });
-
-  if (mode === 'two') {
-    snake2.forEach((seg, i) => {
-      drawRect(seg.x, seg.y, i === 0 ? '#00f' : '#005');
-    });
-  }
-}
-
-function endGame() {
-  gameRunning = false;
-  gameOverScreen.style.display = 'block';
-  finalScores.innerHTML = `Skor Pemain 1: ${score1} <br> Skor Pemain 2: ${mode === 'two' ? score2 : 0}`;
 }
 
 function gameLoop() {
-  if(!gameRunning) return;
+  ctx.clearRect(0, 0, W, H);
+  drawTrack();
 
-  if(alive1 || (mode === 'two' && alive2)) {
-    let res1 = updateSnake(snake1, direction1, nextDirection1, alive1);
-    snake1 = res1.snake;
-    direction1 = res1.direction;
-    alive1 = res1.alive;
-    if(res1.ateFood) {
-      score1++;
-      spawnFood();
-      updateScores();
-    }
-
-    if (mode === 'two') {
-      let res2 = updateSnake(snake2, direction2, nextDirection2, alive2);
-      snake2 = res2.snake;
-      direction2 = res2.direction;
-      alive2 = res2.alive;
-      if(res2.ateFood) {
-        score2++;
-        spawnFood();
-        updateScores();
-      }
-    }
-
-    draw();
-    setTimeout(gameLoop, 100);
-  } else {
-    endGame();
+  if (!isGameOver) {
+    spawnObjects();
+    updateObjects();
+    checkCollision();
+    updateKingkong();
+    scoreDisplay.textContent = 'Skor: ' + score;
   }
+
+  drawKingkong(kingkong.x, kingkong.y);
+  objects.forEach(o => o.draw());
+  scrollY += 5;
+
+  if (!isGameOver) requestAnimationFrame(gameLoop);
 }
 
-function startCountdown(callback) {
-  countdownDiv.style.display = 'block';
-  let count = 3;
-  countdownDiv.textContent = count;
-
-  let interval = setInterval(() => {
-    count--;
-    if(count > 0) {
-      countdownDiv.textContent = count;
-    } else {
-      clearInterval(interval);
-      countdownDiv.style.display = 'none';
-      callback();
-    }
-  }, 1000);
-}
-
-restartButton.addEventListener('click', () => {
+function restartGame() {
+  isGameOver = false;
+  objects = [];
+  kingkong.x = trackCenterX;
+  kingkong.speedX = 0;
+  scrollY = 0;
+  score = 0;
   gameOverScreen.style.display = 'none';
-  startCountdown(() => {
-    initGame();
-    gameRunning = true;
-    gameLoop();
-  });
-});
+  scoreDisplay.textContent = 'Skor: 0';
+  gameLoop();
+}
 
-document.getElementById('btnSingle').addEventListener('click', () => {
-  mode = 'single';
-  menu.style.display = 'none';
-  container.style.display = 'block';
-  scoresDiv.style.display = 'flex';
-  score2Wrapper.style.display = 'none';
-
-  startCountdown(() => {
-    initGame();
-    gameRunning = true;
-    gameLoop();
-  });
-});
-
-document.getElementById('btnTwo').addEventListener('click', () => {
-  mode = 'two';
-  menu.style.display = 'none';
-  container.style.display = 'block';
-  scoresDiv.style.display = 'flex';
-  score2Wrapper.style.display = 'block';
-
-  startCountdown(() => {
-    initGame();
-    gameRunning = true;
-    gameLoop();
-  });
-});
-
-window.addEventListener('keydown', e => {
-  if(!gameRunning) return;
-  switch(e.key.toLowerCase()) {
-    case 'w': if(direction1 !== 'down') nextDirection1 = 'up'; break;
-    case 's': if(direction1 !== 'up') nextDirection1 = 'down'; break;
-    case 'a': if(direction1 !== 'right') nextDirection1 = 'left'; break;
-    case 'd': if(direction1 !== 'left') nextDirection1 = 'right'; break;
-    case 'arrowup': if(mode==='two' && direction2 !== 'down') nextDirection2 = 'up'; break;
-    case 'arrowdown': if(mode==='two' && direction2 !== 'up') nextDirection2 = 'down'; break;
-    case 'arrowleft': if(mode==='two' && direction2 !== 'right') nextDirection2 = 'left'; break;
-    case 'arrowright': if(mode==='two' && direction2 !== 'left') nextDirection2 = 'right'; break;
-  }
-});
+restartButton.addEventListener('click', restartGame);
+gameLoop();
