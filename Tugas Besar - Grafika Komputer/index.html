@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tugas Besar - Grafika Komputer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="menu">
+  <h1>Pilih Mode Main</h1>
+  <button id="btnSingle">Main Sendiri</button>
+  <button id="btnTwo">Main Berdua</button>
+</div>
+
+<div id="container" style="display:none; position: relative;">
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+  <div id="countdown">3</div>
+
+  <div id="gameOverScreen">
+    <div>Game Over!</div>
+    <div id="finalScores"></div>
+    <button id="restartButton">Restart</button>
+  </div>
+</div>
+
+<div id="scores" style="display:none;">
+  <div id="score1Display">Pemain 1 (WASD): <span id="score1">0</span></div>
+  <div id="score2Display" style="display:none;">Pemain 2 (Arrow): <span id="score2">0</span></div>
+</div>
+
+<script src="index.js"></script>
+</body>
+</html>
