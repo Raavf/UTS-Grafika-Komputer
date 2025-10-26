@@ -8,20 +8,17 @@ body {
   align-items: center;
   user-select: none;
 }
-
 canvas {
-  background: #222;
+  margin: 20px;
   border: 2px solid #555;
-  margin-top: 20px;
+  background: #222;
+  display: block;
 }
-
-#scores {
-  font-size: 20px;
-  margin-top: 20px;
-  display: flex;
-  gap: 40px;
+#info {
+  margin-bottom: 10px;
+  max-width: 400px;
+  text-align: center;
 }
-
 #gameOverScreen {
   position: absolute;
   top: 50%;
@@ -30,15 +27,13 @@ canvas {
   background: rgba(0, 0, 0, 0.85);
   border: 2px solid #fff;
   padding: 30px 50px;
-  font-size: 28px;
+  font-size: 24px;
   display: none;
   color: #f33;
   text-align: center;
-  border-radius: 12px;
-  user-select: none;
   z-index: 10;
+  border-radius: 12px;
 }
-
 #restartButton {
   margin-top: 20px;
   padding: 10px 20px;
@@ -48,46 +43,14 @@ canvas {
   border-radius: 8px;
   background-color: #2a7;
   color: #fff;
-  transition: background-color 0.2s ease;
 }
-
 #restartButton:hover {
   background-color: #3c9;
 }
-
 #container {
   position: relative;
 }
-
-#menu {
-  margin-top: 50px;
-  text-align: center;
-}
-
-#menu button {
-  background-color: #2a7;
-  border: none;
-  padding: 15px 30px;
-  color: white;
-  font-size: 22px;
-  margin: 0 15px;
-  cursor: pointer;
-  border-radius: 10px;
-  transition: background-color 0.3s ease;
-}
-
-#menu button:hover {
-  background-color: #3c9;
-}
-
-#countdown {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 80px;
-  color: #2a7;
-  user-select: none;
-  display: none;
-  z-index: 20;
+#scoreDisplay {
+  font-size: 20px;
+  margin-top: -10px;
 }
