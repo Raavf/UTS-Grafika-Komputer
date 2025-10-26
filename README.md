@@ -22,6 +22,7 @@ Pemain 1 (WASD):
  - A → Kiri
  - S → Turun
  - D → Kanan
+
 Pemain 2 (Arrow Keys):
  - ⬆ → Naik
  - ⬅ → Kiri
