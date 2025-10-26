@@ -1,7 +1,10 @@
 # Tugas Besar - Grafika Komputer - Game Ular (2 Player)
 2372059 - Syahrial Achmad
+
 2372062 - Serra Dominggus Guntur Sawaki
+
 2372063 - Rafri Pria Pamungkas
+
 2372902 - Fachrizqy Utomo
 
 
