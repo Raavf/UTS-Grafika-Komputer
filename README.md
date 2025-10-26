@@ -30,4 +30,9 @@ Pemain 2 (Arrow Keys):
  - ➡ → Kanan
 
 # Progres
- - 
+ - Mengatur pergerakan ular berdasarkan input keyboard (WASD & Arrow Keys)
+ - Menambahkan mode Single Player dan Two Player
+ - Menambahkan sistem skor real-time untuk masing-masing pemain
+ - Menambahkan fitur Countdown 3 detik sebelum permainan dimulai
+ - Menambahkan Game Over screen dengan skor akhir dan tombol restart
+ - Membuat fungsi agar ular hanya mati jika menabrak dinding atau dirinya sendiri, bukan ular lain
