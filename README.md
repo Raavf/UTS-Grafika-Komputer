@@ -1,4 +1,4 @@
-# Tugas Besar - Grafika Komputer - Game Ular (2 Player)
+# Tugas Besar - Grafika Komputer - Game: Kingkong Eats Banana
 2372059 - Syahrial Achmad
 
 2372062 - Serra Dominggus Guntur Sawaki
@@ -9,33 +9,25 @@
 
 
 # Deskripsi Tugas 
-Game Ular 2 Player adalah permainan sederhana berbasis HTML, CSS, dan JavaScript. Pemain dapat memilih bermain sendiri atau 
-berdua untuk mengendalikan ular dan mengumpulkan makanan sebanyak mungkin tanpa menabrak dinding atau diri sendiri.
+Kingkong Eats Banana adalah permainan sederhana berbasis HTML, CSS, dan JavaScript.
+Pemain mengendalikan Kingkong untuk menghindari rintangan sambil mengumpulkan pisang sebanyak mungkin untuk mendapatkan skor tertinggi.
+Permainan berakhir ketika Kingkong menabrak salah satu rintangan.
 
 # Fitur Utama
- - Mode Single Player dan Two Player
- - Countdown sebelum permainan dimulai
- - Sistem skor real-time untuk masing-masing pemain
- - Efek tembus antar ular, jadi hanya mati kalau nabrak diri sendiri atau dinding
- - Tampilan Game Over dengan skor akhir dan tombol restart
+ - Pergerakan karakter Kingkong ke kiri dan kanan menggunakan tombol arah
+ - Efek latar track yang bergerak
+ - Sistem skor real-time yang bertambah setiap kali mengambil pisang
+ - Objek rintangan acak berupa barrel dan batu
+ - Pisang muncul secara acak sebagai item yang harus dikumpulkan
+ - Tampilan Game Over dengan skor akhir dan tombol Restart
 
-# Cara main (Kontrol Pemain)
-Pemain 1 (WASD):
- - W = Naik
- - A = Kiri
- - S = Turun
- - D = Kanan
-
+# Cara main
 Pemain 2 (Arrow Keys):
- - ⬆ = Naik
- - ⬅ = Kiri
- - ⬇ = Turun
- - ➡ = Kanan
+ - Arrow Right = Gerak ke kanan
+ - Arrow Left = Gerak ke kiri
 
 # Progres
- - Mengatur pergerakan ular berdasarkan input keyboard (WASD & Arrow Keys)
- - Menambahkan mode Single Player dan Two Player
- - Menambahkan sistem skor real-time untuk masing-masing pemain
- - Menambahkan fitur Countdown 3 detik sebelum permainan dimulai
- - Menambahkan Game Over screen dengan skor akhir dan tombol restart
- - Membuat fungsi agar ular hanya mati jika menabrak dinding atau dirinya sendiri, bukan ular lain
+ - Menggambar karakter Kingkong dengan bentuk tubuh dan wajah sederhana
+ - Membuat objek acak (Barrel, Batu, Pisang)
+ - Menambahkan sistem deteksi tabrakan antara Kingkong dan objek
+ - Menambahkan sistem skor
