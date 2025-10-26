@@ -18,12 +18,15 @@ berdua untuk mengendalikan ular dan mengumpulkan makanan sebanyak mungkin tanpa 
 
 # Cara main (Kontrol Pemain)
 Pemain 1 (WASD):
-W → Naik
-A → Kiri
-S → Turun
-D → Kanan
+ - W → Naik
+ - A → Kiri
+ - S → Turun
+ - D → Kanan
 Pemain 2 (Arrow Keys):
-⬆ → Naik
-⬅ → Kiri
-⬇ → Turun
-➡ → Kanan
+ - ⬆ → Naik
+ - ⬅ → Kiri
+ - ⬇ → Turun
+ - ➡ → Kanan
+
+# Progres
+ - 
