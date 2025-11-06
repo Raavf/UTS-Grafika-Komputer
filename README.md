@@ -1,4 +1,4 @@
-# Tugas Besar - Grafika Komputer - Game: Kingkong Eats Banana
+# Tugas Besar - Grafika Komputer - Insertion Sort
 2372059 - Syahrial Achmad
 
 2372062 - Serra Dominggus Guntur Sawaki
@@ -9,25 +9,12 @@
 
 
 # Deskripsi Tugas 
-Kingkong Eats Banana adalah permainan sederhana berbasis HTML, CSS, dan JavaScript.
-Pemain mengendalikan Kingkong untuk menghindari rintangan sambil mengumpulkan pisang sebanyak mungkin untuk mendapatkan skor tertinggi.
-Permainan berakhir ketika Kingkong menabrak salah satu rintangan.
+Program ini menampilkan visualisasi algoritma Insertion Sort menggunakan HTML, CSS, dan JavaScript.
+Setiap angka ditampilkan sebagai batang (bar) di kanvas, dan proses pengurutan divisualisasikan langkah demi langkah dengan perubahan warna.
+Grafika digambar secara manual menggunakan algoritma DDA (Digital Differential Analyzer) untuk menggambar garis dan bentuk.
 
-# Fitur Utama
- - Pergerakan karakter Kingkong ke kiri dan kanan menggunakan tombol arah
- - Efek latar track yang bergerak
- - Sistem skor real-time yang bertambah setiap kali mengambil pisang
- - Objek rintangan acak berupa barrel dan batu
- - Pisang muncul secara acak sebagai item yang harus dikumpulkan
- - Tampilan Game Over dengan skor akhir dan tombol Restart
-
-# Cara main
-Pemain 2 (Arrow Keys):
- - Arrow Right = Gerak ke kanan
- - Arrow Left = Gerak ke kiri
-
-# Progres
- - Menggambar karakter Kingkong dengan bentuk tubuh dan wajah sederhana
- - Membuat objek acak (Barrel, Batu, Pisang)
- - Menambahkan sistem deteksi tabrakan antara Kingkong dan objek
- - Menambahkan sistem skor
+# Cara mencoba program
+ 1. Buka file index.html di browser.
+ 2. Masukkan angka (0–50) satu per satu ke kolom input, lalu klik “Masukkan”.
+ 3. Setelah semua angka dimasukkan, klik “Urutkan”.
+ 4. Lihat animasi proses pengurutan Insertion Sort di kanvas.
